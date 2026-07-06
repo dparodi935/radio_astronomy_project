@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
@@ -6,8 +7,10 @@ from selenium.webdriver.support import expected_conditions as EC
 
 link =  "https://lofar-surveys.org/hd-en1.html"
 
-#driver is what allows us to interact with the webpage
-driver = webdriver.Firefox()
+#driver is what allows us to interact with the webpage. "headless" means the webpage isn't visibly opened
+options = Options()
+options.add_argument("-headless")
+driver = webdriver.Firefox(options=options)
 driver.get(link)
 
 number_entries_name = "table_id_length"
