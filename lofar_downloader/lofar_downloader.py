@@ -1,5 +1,5 @@
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select
 from selenium.webdriver.support.ui import WebDriverWait
@@ -10,14 +10,23 @@ link =  "https://lofar-surveys.org/hd-en1.html"
 
 options = Options()
 #"headless" means the webpage isn't visibly opened
-options.add_argument("-headless")
+options.add_argument("--headless")
+options.add_argument("--disable-dev-shm-usage") #related to preventing memory crashes
 #set download path
-download_path = os.path.abspath("../lofar_downloads")
-options.set_preference("browser.download.folderList", 2) #set to use custom download folder
-options.set_preference("browser.download.dir", download_path) 
+download_path = os.path.join('..','lofar_downloads')
+if not os.path.isdir(download_path):
+    os.mkdir(download_path)
+download_path = os.path.abspath(download_path)
+
+prefs = {
+    "download.default_directory": download_path,
+    "download.prompt_for_download": False,
+}
+options.add_experimental_option("prefs", prefs)
+
 
 #driver is what allows us to interact with the webpage. 
-driver = webdriver.Firefox(options=options)
+driver = webdriver.Chrome(options=options)
 driver.get(link)
 
 
@@ -46,3 +55,6 @@ for i, row in enumerate(rows):
     button.click()
 
     print(f"Downloaded row {i+1}")
+
+#this is so I can hold the connection open till the download is complete
+input()
