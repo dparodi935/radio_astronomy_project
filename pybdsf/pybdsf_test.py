@@ -12,5 +12,5 @@ img = bdsf.process_image(os.path.join(fits_path,f'{fits_file}.fits'), thresh_pix
 #adaptive rms box means the box used to measure noise shrinks near bright sources to capture the noise artefacts
 img_adapt = bdsf.process_image(os.path.join(fits_path,f'{fits_file}.fits'), thresh_pix=5.0, thresh_isl=4.0,adaptive_rms_box=True,ncores=2)
 
-img.write_catalog(outfile=os.path.join(fits_path,f'{fits_file}_sources.reg'), format='ds9')
-img_adapt.write_catalog(outfile=os.path.join(fits_path, f'{fits_file}_sources_adapt.reg'), format='ds9')
+img.write_catalog(outfile=os.path.join(fits_path,f'{fits_file}_sources.fits'), format='fits')
+img_adapt.write_catalog(outfile=os.path.join(fits_path, f'{fits_file}_sources_adapt.fits'), format='fits')
