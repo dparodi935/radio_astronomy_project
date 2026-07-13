@@ -2,7 +2,7 @@ import bdsf
 import os 
 
 script_dir = os.path.dirname(os.path.abspath(__file__)) #returns folder that this script is in
-fits_path = os.path.join('..','lofar_downloads')
+fits_path = os.path.join(script_dir,'..','..','lofar_downloads')
 fits_file = 'facet_19'
 
 #creates catalog. thresh_pix and isl are the S/N ratios for the peaks and surrounding island respectively.
