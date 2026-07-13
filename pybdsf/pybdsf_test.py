@@ -1,7 +1,7 @@
 import bdsf
 import os 
 
-#script_dir = os.path.dirname(os.path.abspath(__file__))
+script_dir = os.path.dirname(os.path.abspath(__file__)) #returns folder that this script is in
 fits_path = os.path.join('..','lofar_downloads')
 fits_file = 'facet_19'
 

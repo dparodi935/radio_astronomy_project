@@ -8,7 +8,9 @@ import matplotlib.pyplot as plt
 
 #create filepath of fits file
 fits_filename = "facet_19"
-fits_folder_path = os.path.join("..","lofar_downloads")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+print(script_dir)
+fits_folder_path = os.path.join(script_dir,"..","..","lofar_downloads")
 fits_filepath = os.path.join(fits_folder_path,f"{fits_filename}.fits")
 
 #open and extract data

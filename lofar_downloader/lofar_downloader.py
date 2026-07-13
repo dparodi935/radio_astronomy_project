@@ -12,8 +12,10 @@ options = Options()
 #"headless" means the webpage isn't visibly opened
 options.add_argument("--headless")
 options.add_argument("--disable-dev-shm-usage") #related to preventing memory crashes
+
 #set download path
-download_path = os.path.join('..','lofar_downloads')
+script_dir = os.path.dirname(os.path.abspath(__file__)) #returns folder that this script is in
+download_path = os.path.join(script_dir,'..','..','lofar_downloads')
 if not os.path.isdir(download_path):
     os.mkdir(download_path)
 download_path = os.path.abspath(download_path)
