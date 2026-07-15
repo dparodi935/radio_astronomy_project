@@ -15,42 +15,37 @@ fits_folder_path = os.path.join(script_dir,"..","..","lofar_downloads")
 fits_filepath = os.path.join(fits_folder_path,f"{fits_filename}.fits")
 
 #open and extract data
-fits_file = fits.open(fits_filepath)
-data = fits_file[0].data
-fits_file.close()
-
-coord_system = WCS(fits_file[0].header).celestial
-coord_scale = proj_plane_pixel_scales(coord_system)[1] #1 is chosen because pixels are square, and to avoid RA related issues
+with fits.open(fits_filepath) as fits_file:
+    data = fits_file[0].data
+    coord_system = WCS(fits_file[0].header).celestial
+    coord_scale = proj_plane_pixel_scales(coord_system)[1] #1 is chosen because pixels are square, and to avoid RA related issues
 
 #open PyBDSF catalogue and create Table
 catalogue_filename = f"{fits_filename}_sources"
 catalogue_filepath = os.path.join(fits_folder_path,f"{catalogue_filename}.fits")
 catalogue = Table.read(catalogue_filepath, format="fits")
 
-print(catalogue.colnames)
-
-ra_list = catalogue["RA"]
-dec_list = catalogue["DEC"]
 maj_list, min_list, pa_list = catalogue["Maj_img_plane"], catalogue["Min_img_plane"], catalogue["PA_img_plane"]
 xposn_list, yposn_list = catalogue["Xposn"], catalogue["Yposn"]
-number = 10 #len(ra) - number of sources to cycle through
+
+number = 5 #len(ra) - number of sources to cycle through
 
 #cycles through every source and plots the cutout
 for i in range(number):
-    #coords = SkyCoord(ra_list[i], dec_list[i], unit="deg", frame="icrs") 
-    #pixel_pos = coord_system.world_to_pixel(coords)
     pixel_pos = (xposn_list[i], yposn_list[i])
     size = 40
     cutout = Cutout2D(data, pixel_pos, size)
     
     #set up image
     fig, ax = plt.subplots()
-    
-    
     ax.imshow(cutout.data, origin="lower")
     
+    #cutout_center accounts for the fact that the cutout can only cutoff at the pixel edges (so the sub-pixel position of the source will
+    # not be centred)
+    cutout_center = cutout.to_cutout_position(pixel_pos) 
+
     #draw ellipse
-    gaussian = Ellipse((size/2,size/2), min_list[i]/coord_scale, maj_list[i]/coord_scale, angle=pa_list[i], fill=False, lw=2, zorder=10)
+    gaussian = Ellipse(cutout_center, min_list[i]/coord_scale, maj_list[i]/coord_scale, angle=pa_list[i], fill=False, lw=2, zorder=10)
     ax.add_patch(gaussian)
     
     plt.show()
