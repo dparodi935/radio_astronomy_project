@@ -25,6 +25,7 @@ catalogue_filename = f"{fits_filename}_sources"
 catalogue_filepath = os.path.join(fits_folder_path,f"{catalogue_filename}.fits")
 catalogue = Table.read(catalogue_filepath, format="fits")
 
+catalogue = catalogue[(catalogue["S_Code" ] == "M") & (catalogue["Peak_flux" ] > 0.005)]
 maj_list, min_list, pa_list = catalogue["Maj_img_plane"], catalogue["Min_img_plane"], catalogue["PA_img_plane"]
 xposn_list, yposn_list = catalogue["Xposn"], catalogue["Yposn"]
 
@@ -35,6 +36,10 @@ for i in range(number):
     pixel_pos = (xposn_list[i], yposn_list[i])
     size = 40
     cutout = Cutout2D(data, pixel_pos, size)
+    
+    # Previous coord method:
+    #coords = SkyCoord(ra_list[i], dec_list[i], unit="deg", frame="icrs")
+    #pixel_pos = coord_system.world_to_pixel(coords)
     
     #set up image
     fig, ax = plt.subplots()
